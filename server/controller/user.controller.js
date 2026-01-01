@@ -95,38 +95,29 @@ export const getUserProfile= async(req,res,)=>{
 }
 
 export const registerInEvent =async(req,res)=>{
-console.log("1");
 
     try {
         const {id} =req.params;
-console.log("23",id);
-
         const userId = req.user;
-        console.log("4");
     if(!id){
         return res.status(400).json({success:false,message:"id not found"})
     }
- console.log("5");
+
     const eventExists = await eventModel.findOne({_id:id});
- console.log("6");
+
     if(!eventExists){
         return res.status(400).json({success:false,message:"Event not Found"})
-    } console.log("7");
+    }
 
     const userAlreadyEnrolled = await UserModel.findOne({_id:userId,events:{$in:[eventExists._id]}})
-     console.log("8");
 if(userAlreadyEnrolled){
         return res.status(400).json({success:false,message:"User Already enrolled in Event"})
     }
-     console.log("9");
     const updateUser = await UserModel.findOneAndUpdate({_id:userId}, {$push: {events: eventExists._id}})
-    await updateUser.save()
-    console.log("10",updateUser);
+   
 
     res.status(200).json({success:true,message:"User registered in event successfully",updateUser})
-
     } catch (error) {
-         console.log("11");
         res.status(500).json({error:error.message,message:"Server error during register event"})
       }
 }

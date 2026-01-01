@@ -4,6 +4,7 @@ import 'dotenv/config.js'
 import connectToDB from './config/db.config.js'
 import userRouter from './routes/user.routes.js'
 import adminRouter from './routes/admin.routes.js'
+import { authAdmin } from './middleware/admin.middleware.js'
 
 
 const app =express()
@@ -13,7 +14,7 @@ app.use(cors())
 
 const PORT = process.env.PORT ;
 app.use('/api/user',userRouter)
-app.use('/api/admin',adminRouter)
+app.use('/api/admin',authAdmin,adminRouter)
 
 app.get('/',(req,res)=>{
     res.send("Server running properly")
